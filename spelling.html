@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spelling Bee Practice - โรงเรียนนาวังศึกษาวิช</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Kanit', sans-serif;
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        .bounce-in {
+            animation: bounceIn 0.6s ease-out;
+        }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-500 via-blue-600 to-red-600 min-h-screen">
+    <!-- Header -->
+    <div class="bg-white/20 backdrop-blur-sm border-b border-white/30">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-center mb-2">
+                <div class="bg-white rounded-full p-2 mr-4 shadow-lg">
+                    <img src="https://upload.wikimedia.org/wikipedia/th/thumb/1/17/Nawang_Suksawit_School_Logo.svg/250px-Nawang_Suksawit_School_Logo.svg.png" 
+                         alt="โลโก้โรงเรียนนาวังศึกษาวิช" 
+                         class="w-12 h-12 object-contain">
+                </div>
+                <div class="text-center">
+                    <h1 class="text-3xl font-bold text-white">🐝 Spelling Bee Practice</h1>
+                    <h2 class="text-xl font-semibold text-yellow-200">โรงเรียนนาวังศึกษาวิช</h2>
+                </div>
+            </div>
+            <p class="text-white/90 text-center">แพลตฟอร์มฝึกสะกดคำภาษาอังกฤษ สำหรับนักเรียนโรงเรียนนาวังศึกษาวิช</p>
+        </div>
+    </div>
+
+    <!-- Role Selection Screen -->
+    <div id="roleSelection" class="container mx-auto px-6 py-8 text-center">
+        <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 max-w-md mx-auto">
+            <div class="mb-6">
+                <div class="bg-white rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center shadow-lg">
+                    <img src="https://upload.wikimedia.org/wikipedia/th/thumb/1/17/Nawang_Suksawit_School_Logo.svg/250px-Nawang_Suksawit_School_Logo.svg.png" 
+                         alt="โลโก้โรงเรียนนาวังศึกษาวิช" 
+                         class="w-16 h-16 object-contain">
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">โรงเรียนนาวังศึกษาวิช</h2>
+                <h3 class="text-xl font-semibold text-blue-600 mb-4">Spelling Bee Practice</h3>
+            </div>
+            <p class="text-gray-600 mb-8">เลือกบทบาทของคุณในระบบฝึกสะกดคำ</p>
+            
+            <div class="space-y-4">
+                <button onclick="selectRole('teacher')" 
+                        class="w-full bg-gradient-to-r from-blue-500 to-red-500 text-white font-semibold py-4 px-6 rounded-xl hover:from-blue-600 hover:to-red-600 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                    👨‍🏫 ครู (Teacher)
+                    <div class="text-sm opacity-90 mt-1">จัดการคำศัพท์และดูหน้าจอทั้งหมด</div>
+                </button>
+                
+                <button onclick="selectRole('student')" 
+                        class="w-full bg-gradient-to-r from-green-500 to-teal-600 text-white font-semibold py-4 px-6 rounded-xl hover:from-green-600 hover:to-teal-700 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                    👨‍🎓 นักเรียน (Student)
+                    <div class="text-sm opacity-90 mt-1">ฝึกสะกดคำและทำแบบทดสอบ</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div id="mainContent" class="container mx-auto px-6 py-8 hidden">
+        <div class="grid lg:grid-cols-2 gap-8">
+            <!-- Admin Panel -->
+            <div id="adminPanel" class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <span class="bg-blue-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">👨‍🏫</span>
+                    เพิ่มคำศัพท์ใหม่
+                </h2>
+                
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">คำศัพท์ (ภาษาอังกฤษ)</label>
+                        <input type="text" id="wordInput" placeholder="เช่น beautiful, elephant, dictionary" 
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors">
+                    </div>
+                    
+
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">ประโยคตัวอย่าง</label>
+                        <textarea id="sentenceInput" placeholder="เช่น The beautiful sunset painted the sky in vibrant colors." 
+                                  class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors h-20 resize-none"></textarea>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">ระดับคำศัพท์</label>
+                        <div class="flex gap-2">
+                            <select id="levelInput" class="flex-1 px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors">
+                                <option value="A1">A1 - เริ่มต้น (Beginner)</option>
+                                <option value="A2">A2 - พื้นฐาน (Elementary)</option>
+                                <option value="B1">B1 - ปานกลาง (Intermediate)</option>
+                                <option value="B2">B2 - ปานกลางสูง (Upper-Intermediate)</option>
+                                <option value="C1">C1 - สูง (Advanced)</option>
+                                <option value="C2">C2 - เชี่ยวชาญ (Proficiency)</option>
+                            </select>
+                            <button type="button" onclick="autoDetectLevel()" 
+                                    class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-3 px-4 rounded-xl transition-colors duration-200 whitespace-nowrap">
+                                🤖 ตรวจอัตโนมัติ
+                            </button>
+                        </div>
+                        <div id="levelDetectionResult" class="text-xs text-gray-500 mt-1 hidden"></div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-700 font-medium mb-2">ไฟล์เสียง (MP3, WAV)</label>
+                        <input type="file" id="audioInput" accept="audio/*" 
+                               class="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:outline-none transition-colors file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100">
+                        <div class="text-xs text-gray-500 mt-1">อัปโหลดไฟล์เสียงสำหรับการออกเสียงคำศัพท์</div>
+                    </div>
+                    
+                    <button onclick="addWord()" 
+                            class="w-full bg-gradient-to-r from-blue-500 to-red-500 text-white font-semibold py-3 px-6 rounded-xl hover:from-blue-600 hover:to-red-600 transform hover:scale-105 transition-all duration-200 shadow-lg">
+                        ➕ เพิ่มคำศัพท์
+                    </button>
+                </div>
+
+                <!-- Quick Add Section -->
+                <div class="mt-6 bg-gradient-to-r from-green-50 to-blue-50 rounded-xl p-4 border-2 border-green-200">
+                    <h3 class="text-md font-semibold text-gray-800 mb-3 flex items-center">
+                        ⚡ เพิ่มคำศัพท์ด่วน
+                        <span class="ml-2 text-xs bg-green-500 text-white px-2 py-1 rounded-full">ใหม่!</span>
+                    </h3>
+                    <div class="flex gap-2">
+                        <input type="text" id="quickWordInput" placeholder="พิมพ์คำศัพท์..." 
+                               class="flex-1 px-3 py-2 text-sm border-2 border-gray-200 rounded-lg focus:border-green-500 focus:outline-none transition-colors"
+                               onkeypress="handleQuickAdd(event)">
+                        <button onclick="quickAddWord()" 
+                                class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors duration-200 text-sm whitespace-nowrap">
+                            🚀 เพิ่มเลย
+                        </button>
+                    </div>
+                    <div class="text-xs text-gray-600 mt-2">💡 พิมพ์คำแล้วกด Enter หรือคลิก "เพิ่มเลย" - ระบบจะสร้างความหมายและประโยคให้อัตโนมัติ</div>
+                </div>
+
+                <!-- Word List -->
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">📚 รายการคำศัพท์</h3>
+                    <div id="wordList" class="space-y-2 max-h-60 overflow-y-auto">
+                        <!-- Words will be added here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practice Panel -->
+            <div id="practicePanel" class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 flex items-center">
+                    <span class="bg-green-500 text-white rounded-full w-8 h-8 flex items-center justify-center mr-3 text-sm">🎯</span>
+                    ฝึกสะกดคำ
+                </h2>
+
+                <div id="practiceArea" class="text-center">
+                    <div id="noWordsMessage" class="py-12">
+                        <div class="text-6xl mb-4">📝</div>
+                        <p class="text-gray-500 text-lg">เพิ่มคำศัพท์เพื่อเริ่มฝึกสะกดคำ</p>
+                    </div>
+
+                    <div id="practiceContent" class="hidden">
+                        <!-- Current Word Display -->
+                        <div class="bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl p-6 mb-6">
+                            <div class="flex justify-between items-center mb-2">
+                                <div class="text-sm text-gray-600">คำที่ <span id="currentWordNumber">1</span> จาก <span id="totalWords">0</span></div>
+                                <div id="currentLevel" class="px-3 py-1 rounded-full text-xs font-semibold bg-green-500 text-white">A1</div>
+                            </div>
+                            <div class="text-3xl font-bold text-gray-800 mb-2" id="currentMeaning">ความหมาย</div>
+                            <div class="text-gray-600 italic mb-4" id="currentSentence">ประโยคตัวอย่าง</div>
+                            
+                            <!-- Audio Button -->
+                            <button onclick="playAudio()" id="audioButton"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-6 rounded-full transition-colors duration-200 pulse-animation">
+                                🔊 ฟังการออกเสียง
+                            </button>
+                            <div id="audioStatus" class="text-xs text-gray-500 mt-2"></div>
+                        </div>
+
+                        <!-- Answer Input -->
+                        <div class="mb-6">
+                            <input type="text" id="answerInput" placeholder="พิมพ์คำศัพท์ที่ได้ยิน..." 
+                                   class="w-full px-6 py-4 text-xl text-center border-2 border-gray-200 rounded-xl focus:border-green-500 focus:outline-none transition-colors"
+                                   onkeypress="handleKeyPress(event)" oninput="handleAutoCheck()">
+                        </div>
+
+                        <!-- Level Filter Buttons (Only for Teachers) -->
+                        <div id="levelFilterSection" class="mb-4">
+                            <div class="text-sm text-gray-600 mb-2 text-center">🎯 กรองคำศัพท์ตามระดับ:</div>
+                            <div class="flex gap-2 justify-center flex-wrap mb-3">
+                                <button onclick="filterByLevel('all')" id="levelAll"
+                                        class="bg-gradient-to-r from-blue-500 to-red-500 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs">
+                                    ทั้งหมด
+                                </button>
+                                <button onclick="filterByLevel('A1')" id="levelA1"
+                                        class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs">
+                                    A1
+                                </button>
+                                <button onclick="filterByLevel('A2')" id="levelA2"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs">
+                                    A2
+                                </button>
+                                <button onclick="filterByLevel('B1')" id="levelB1"
+                                        class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs">
+                                    B1
+                                </button>
+                                <button onclick="filterByLevel('B2')" id="levelB2"
+                                        class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs">
+                                    B2
+                                </button>
+                                <button onclick="filterByLevel('C1')" id="levelC1"
+                                        class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs">
+                                    C1
+                                </button>
+                                <button onclick="filterByLevel('C2')" id="levelC2"
+                                        class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs">
+                                    C2
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Mode Toggle and Role Switch -->
+                        <div class="mb-4 flex gap-2 justify-center flex-wrap">
+                            <button onclick="toggleMode()" id="modeButton"
+                                    class="bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-6 rounded-full transition-colors duration-200 text-sm">
+                                🔀 โหมดสุ่มคำ
+                            </button>
+                            <button onclick="switchRole()" id="roleSwitch"
+                                    class="bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-full transition-colors duration-200 text-sm">
+                                🔄 เปลี่ยนบทบาท
+                            </button>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-4 justify-center mb-6">
+                            <button onclick="checkAnswer()" 
+                                    class="bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-8 rounded-xl transition-colors duration-200">
+                                ✓ ตรวจคำตอบ
+                            </button>
+                            <button onclick="showHint()" 
+                                    class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 px-8 rounded-xl transition-colors duration-200">
+                                💡 ดูคำใบ้
+                            </button>
+                            <button onclick="nextWord()" 
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 px-8 rounded-xl transition-colors duration-200">
+                                ⏭️ คำถัดไป
+                            </button>
+                        </div>
+
+                        <!-- Feedback Area -->
+                        <div id="feedback" class="hidden rounded-xl p-4 mb-4"></div>
+
+                        <!-- Hint Area -->
+                        <div id="hintArea" class="hidden bg-yellow-50 border-2 border-yellow-200 rounded-xl p-4 mb-4">
+                            <div class="font-semibold text-yellow-800 mb-2">💡 คำใบ้:</div>
+                            <div id="hintText" class="text-yellow-700"></div>
+                        </div>
+
+                        <!-- Progress -->
+                        <div class="bg-gray-100 rounded-full h-3 mb-4">
+                            <div id="progressBar" class="bg-gradient-to-r from-green-400 to-blue-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+
+                        <!-- Score -->
+                        <div class="text-center">
+                            <div class="text-lg font-semibold text-gray-700">
+                                คะแนน: <span id="score" class="text-green-600">0</span> / <span id="totalAttempts" class="text-blue-600">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let words = [];
+        let shuffledWords = [];
+        let currentWordIndex = 0;
+        let score = 0;
+        let totalAttempts = 0;
+        let currentWord = null;
+        let isRandomMode = true;
+        let userRole = null;
+        let currentLevelFilter = 'all';
+
+        // Sample words to start with
+        const sampleWords = [
+            {
+                word: "school",
+                meaning: "คำศัพท์: school",
+                sentence: "I love studying at Nawang Suksa Wich School.",
+                level: "A1"
+            },
+            {
+                word: "student",
+                meaning: "คำศัพท์: student",
+                sentence: "Every student at our school works hard to learn English.",
+                level: "A1"
+            },
+            {
+                word: "teacher",
+                meaning: "คำศัพท์: teacher",
+                sentence: "Our English teacher helps us practice spelling every day.",
+                level: "A1"
+            },
+            {
+                word: "education",
+                meaning: "คำศัพท์: education",
+                sentence: "Education is the key to success in life.",
+                level: "B1"
+            },
+            {
+                word: "knowledge",
+                meaning: "คำศัพท์: knowledge",
+                sentence: "We gain knowledge through reading and studying.",
+                level: "B2"
+            }
+        ];
+
+        // Initialize with sample words
+        words = [...sampleWords];
+        shuffleWords();
+
+        // Load voices for Text-to-Speech
+        function loadVoices() {
+            if ('speechSynthesis' in window) {
+                speechSynthesis.getVoices();
+            }
+        }
+
+        // Load voices when page loads and when voices change
+        if ('speechSynthesis' in window) {
+            loadVoices();
+            speechSynthesis.onvoiceschanged = loadVoices;
+        }
+
+        // Role selection function
+        function selectRole(role) {
+            userRole = role;
+            document.getElementById('roleSelection').classList.add('hidden');
+            document.getElementById('mainContent').classList.remove('hidden');
+            
+            if (role === 'student') {
+                // Hide admin panel for students
+                document.getElementById('adminPanel').classList.add('hidden');
+                document.getElementById('practicePanel').classList.remove('lg:col-span-1');
+                document.getElementById('practicePanel').classList.add('lg:col-span-2', 'max-w-4xl', 'mx-auto');
+                
+                // Hide level filter section for students
+                document.getElementById('levelFilterSection').classList.add('hidden');
+                
+                // Show welcome message for students
+                showFeedback('ยินดีต้อนรับนักเรียนโรงเรียนนาวังศึกษาวิช! เริ่มฝึกสะกดคำภาษาอังกฤษได้เลย 📚', 'info');
+            } else {
+                // Show both panels for teachers
+                document.getElementById('adminPanel').classList.remove('hidden');
+                
+                // Show level filter section for teachers
+                document.getElementById('levelFilterSection').classList.remove('hidden');
+                
+                // Show welcome message for teachers
+                showFeedback('ยินดีต้อนรับครูโรงเรียนนาวังศึกษาวิช! คุณสามารถจัดการคำศัพท์และดูการฝึกของนักเรียนได้ 👨‍🏫', 'info');
+            }
+            
+            updateWordList();
+            updatePracticeArea();
+        }
+
+        function addWord() {
+            const wordInput = document.getElementById('wordInput');
+            const sentenceInput = document.getElementById('sentenceInput');
+            const levelInput = document.getElementById('levelInput');
+            const audioInput = document.getElementById('audioInput');
+
+            const word = wordInput.value.trim();
+            const sentence = sentenceInput.value.trim();
+            const level = levelInput.value;
+
+            if (!word) {
+                alert('กรุณากรอกคำศัพท์');
+                return;
+            }
+
+            const newWord = {
+                word: word.toLowerCase(),
+                meaning: `คำศัพท์: ${word}`,
+                sentence: sentence || `Example sentence with ${word}.`,
+                level: level,
+                audioUrl: null
+            };
+
+            // Handle audio file if uploaded
+            if (audioInput.files && audioInput.files[0]) {
+                const audioFile = audioInput.files[0];
+                const audioUrl = URL.createObjectURL(audioFile);
+                newWord.audioUrl = audioUrl;
+                newWord.audioFile = audioFile;
+            }
+
+            words.push(newWord);
+            shuffleWords();
+            updateWordList();
+            updatePracticeArea();
+
+            // Clear inputs
+            wordInput.value = '';
+            sentenceInput.value = '';
+            levelInput.value = 'A1';
+            audioInput.value = '';
+
+            // Show success message
+            const audioMessage = newWord.audioUrl ? ' พร้อมไฟล์เสียง' : '';
+            showFeedback(`เพิ่มคำศัพท์ระดับ ${level} เรียบร้อยแล้ว${audioMessage}! 🎉`, 'success');
+        }
+
+        // Get level color for display
+        function getLevelColor(level) {
+            const colors = {
+                'A1': 'bg-green-500',
+                'A2': 'bg-blue-500', 
+                'B1': 'bg-yellow-500',
+                'B2': 'bg-orange-500',
+                'C1': 'bg-red-500',
+                'C2': 'bg-purple-500'
+            };
+            return colors[level] || 'bg-green-500';
+        }
+
+        // Filter words by level
+        function filterByLevel(level) {
+            currentLevelFilter = level;
+            currentWordIndex = 0;
+            
+            // Update button styles
+            document.querySelectorAll('[id^="level"]').forEach(btn => {
+                btn.className = btn.className.replace('from-blue-500 to-red-500', 'hover:bg-gray-600').replace('bg-gradient-to-r', 'bg-gray-500');
+            });
+            
+            const activeButton = document.getElementById(`level${level === 'all' ? 'All' : level}`);
+            if (level === 'all') {
+                activeButton.className = 'bg-gradient-to-r from-blue-500 to-red-500 text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs';
+            } else {
+                activeButton.className = `${getLevelColor(level)} text-white font-semibold py-2 px-4 rounded-full transition-colors duration-200 text-xs`;
+            }
+            
+            shuffleWords();
+            updatePracticeArea();
+            
+            const filteredCount = getFilteredWords().length;
+            const levelText = level === 'all' ? 'ทั้งหมด' : `ระดับ ${level}`;
+            showFeedback(`กรองคำศัพท์${levelText} พบ ${filteredCount} คำ! 🎯`, 'info');
+        }
+
+        // Get filtered words based on current level filter
+        function getFilteredWords() {
+            if (currentLevelFilter === 'all') {
+                return words;
+            }
+            return words.filter(word => (word.level || 'A1') === currentLevelFilter);
+        }
+
+        function updateWordList() {
+            const wordList = document.getElementById('wordList');
+            wordList.innerHTML = '';
+
+            words.forEach((wordObj, index) => {
+                const wordItem = document.createElement('div');
+                wordItem.className = 'bg-gray-50 rounded-lg p-3 flex justify-between items-center';
+                wordItem.innerHTML = `
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <div class="font-semibold text-gray-800">${wordObj.word}</div>
+                            <span class="px-2 py-1 rounded-full text-xs font-semibold ${getLevelColor(wordObj.level)} text-white">${wordObj.level || 'A1'}</span>
+                        </div>
+                        <div class="text-sm text-gray-600">${wordObj.meaning}</div>
+                        ${wordObj.audioUrl ? '<div class="text-xs text-green-600 mt-1">🔊 มีไฟล์เสียง</div>' : '<div class="text-xs text-gray-400 mt-1">ไม่มีไฟล์เสียง</div>'}
+                    </div>
+                    <button onclick="removeWord(${index})" class="text-red-500 hover:text-red-700 font-bold ml-2">✕</button>
+                `;
+                wordList.appendChild(wordItem);
+            });
+        }
+
+        function removeWord(index) {
+            words.splice(index, 1);
+            shuffleWords();
+            updateWordList();
+            updatePracticeArea();
+            
+            if (currentWordIndex >= getActiveWordList().length && getActiveWordList().length > 0) {
+                currentWordIndex = 0;
+            }
+            
+            if (words.length > 0) {
+                loadCurrentWord();
+            }
+        }
+
+        function updatePracticeArea() {
+            const noWordsMessage = document.getElementById('noWordsMessage');
+            const practiceContent = document.getElementById('practiceContent');
+
+            if (words.length === 0) {
+                noWordsMessage.classList.remove('hidden');
+                practiceContent.classList.add('hidden');
+            } else {
+                noWordsMessage.classList.add('hidden');
+                practiceContent.classList.remove('hidden');
+                loadCurrentWord();
+            }
+        }
+
+        function loadCurrentWord() {
+            const activeWords = getActiveWordList();
+            if (activeWords.length === 0) return;
+
+            currentWord = activeWords[currentWordIndex];
+            document.getElementById('currentWordNumber').textContent = currentWordIndex + 1;
+            document.getElementById('totalWords').textContent = activeWords.length;
+            document.getElementById('currentMeaning').textContent = currentWord.meaning;
+            document.getElementById('currentSentence').textContent = currentWord.sentence;
+            document.getElementById('answerInput').value = '';
+            document.getElementById('feedback').classList.add('hidden');
+            document.getElementById('hintArea').classList.add('hidden');
+
+            // Update level display
+            const levelElement = document.getElementById('currentLevel');
+            const level = currentWord.level || 'A1';
+            levelElement.textContent = level;
+            levelElement.className = `px-3 py-1 rounded-full text-xs font-semibold ${getLevelColor(level)} text-white`;
+
+            // Update audio button status
+            const audioStatus = document.getElementById('audioStatus');
+            const audioButton = document.getElementById('audioButton');
+            
+            if (currentWord.audioUrl) {
+                audioStatus.textContent = '✅ มีไฟล์เสียง - คลิกเพื่อฟัง';
+                audioStatus.className = 'text-xs text-green-600 mt-2';
+                audioButton.classList.remove('opacity-50');
+                audioButton.disabled = false;
+            } else {
+                audioStatus.textContent = '🤖 ใช้เสียงสังเคราะห์ - คลิกเพื่อฟัง';
+                audioStatus.className = 'text-xs text-blue-500 mt-2';
+                audioButton.classList.remove('opacity-50');
+                audioButton.disabled = false;
+            }
+
+            updateProgress();
+        }
+
+        function playAudio() {
+            if (currentWord && currentWord.audioUrl) {
+                // Play the uploaded audio file
+                const audio = new Audio(currentWord.audioUrl);
+                audio.play().catch(error => {
+                    console.error('Error playing audio:', error);
+                    showFeedback('ไม่สามารถเล่นไฟล์เสียงได้', 'error');
+                });
+            } else {
+                // Use Text-to-Speech as fallback for pronunciation
+                if ('speechSynthesis' in window && currentWord) {
+                    const utterance = new SpeechSynthesisUtterance(currentWord.word);
+                    utterance.lang = 'en-US';
+                    utterance.rate = 0.8;
+                    utterance.pitch = 1;
+                    
+                    // Try to use a female voice if available
+                    const voices = speechSynthesis.getVoices();
+                    const englishVoice = voices.find(voice => 
+                        voice.lang.startsWith('en') && voice.name.includes('Female')
+                    ) || voices.find(voice => voice.lang.startsWith('en'));
+                    
+                    if (englishVoice) {
+                        utterance.voice = englishVoice;
+                    }
+                    
+                    speechSynthesis.speak(utterance);
+                    showFeedback(`🔊 กำลังออกเสียงคำ "${currentWord.word}"`, 'info');
+                } else {
+                    showFeedback(`🔊 ไม่สามารถออกเสียงได้ในเบราว์เซอร์นี้`, 'warning');
+                }
+            }
+        }
+
+        function checkAnswer() {
+            const answerInput = document.getElementById('answerInput');
+            const userAnswer = answerInput.value.trim().toLowerCase();
+
+            if (!userAnswer) {
+                showFeedback('กรุณาพิมพ์คำตอบ', 'warning');
+                return;
+            }
+
+            totalAttempts++;
+            document.getElementById('totalAttempts').textContent = totalAttempts;
+
+            if (userAnswer === currentWord.word.toLowerCase()) {
+                score++;
+                document.getElementById('score').textContent = score;
+                showFeedback(`🎉 ถูกต้อง! คำตอบคือ "${currentWord.word}"`, 'success');
+                
+                // Add bounce animation to the input
+                answerInput.classList.add('bounce-in');
+                setTimeout(() => answerInput.classList.remove('bounce-in'), 600);
+            } else {
+                showFeedback(`❌ ไม่ถูกต้อง คำตอบที่ถูกคือ "${currentWord.word}"`, 'error');
+                
+                // Add shake animation to the input
+                answerInput.classList.add('shake');
+                setTimeout(() => answerInput.classList.remove('shake'), 500);
+            }
+        }
+
+        function showHint() {
+            const hintArea = document.getElementById('hintArea');
+            const hintText = document.getElementById('hintText');
+            
+            const word = currentWord.word;
+            const hint = `คำนี้มี ${word.length} ตัวอักษร และขึ้นต้นด้วย "${word[0].toUpperCase()}" ลงท้ายด้วย "${word[word.length-1].toLowerCase()}"`;
+            
+            hintText.textContent = hint;
+            hintArea.classList.remove('hidden');
+        }
+
+        function nextWord() {
+            const activeWords = getActiveWordList();
+            if (activeWords.length === 0) return;
+            
+            currentWordIndex = (currentWordIndex + 1) % activeWords.length;
+            
+            // If we've gone through all words in random mode, reshuffle
+            if (isRandomMode && currentWordIndex === 0 && activeWords.length > 1) {
+                shuffleWords();
+                showFeedback('🔄 สุ่มคำใหม่แล้ว!', 'info');
+            }
+            
+            loadCurrentWord();
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.getElementById('feedback');
+            feedback.classList.remove('hidden');
+            
+            let bgColor, textColor;
+            switch(type) {
+                case 'success':
+                    bgColor = 'bg-green-100 border-green-200';
+                    textColor = 'text-green-800';
+                    break;
+                case 'error':
+                    bgColor = 'bg-red-100 border-red-200';
+                    textColor = 'text-red-800';
+                    break;
+                case 'warning':
+                    bgColor = 'bg-yellow-100 border-yellow-200';
+                    textColor = 'text-yellow-800';
+                    break;
+                case 'info':
+                    bgColor = 'bg-blue-100 border-blue-200';
+                    textColor = 'text-blue-800';
+                    break;
+            }
+            
+            feedback.className = `rounded-xl p-4 mb-4 border-2 ${bgColor} ${textColor}`;
+            feedback.textContent = message;
+
+            // Auto hide after 3 seconds for non-error messages
+            if (type !== 'error') {
+                setTimeout(() => {
+                    feedback.classList.add('hidden');
+                }, 3000);
+            }
+        }
+
+        function updateProgress() {
+            const activeWords = getActiveWordList();
+            if (activeWords.length === 0) return;
+            
+            const progress = ((currentWordIndex + 1) / activeWords.length) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                checkAnswer();
+            }
+        }
+
+        // Auto-check function when user types
+        function handleAutoCheck() {
+            const answerInput = document.getElementById('answerInput');
+            const userAnswer = answerInput.value.trim().toLowerCase();
+            
+            if (!currentWord || !userAnswer) return;
+            
+            // Check if the answer matches the current word
+            if (userAnswer === currentWord.word.toLowerCase()) {
+                // Small delay to ensure user sees their complete typing
+                setTimeout(() => {
+                    totalAttempts++;
+                    score++;
+                    document.getElementById('score').textContent = score;
+                    document.getElementById('totalAttempts').textContent = totalAttempts;
+                    
+                    showFeedback(`🎉 ถูกต้อง! คำตอบคือ "${currentWord.word}"`, 'success');
+                    
+                    // Add bounce animation to the input
+                    answerInput.classList.add('bounce-in');
+                    setTimeout(() => answerInput.classList.remove('bounce-in'), 600);
+                    
+                    // Auto move to next word after 1.5 seconds
+                    setTimeout(() => {
+                        nextWord();
+                    }, 1500);
+                }, 300);
+            }
+        }
+
+        // Shuffle words array
+        function shuffleWords() {
+            const filteredWords = getFilteredWords();
+            shuffledWords = [...filteredWords];
+            for (let i = shuffledWords.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledWords[i], shuffledWords[j]] = [shuffledWords[j], shuffledWords[i]];
+            }
+            currentWordIndex = 0;
+        }
+
+        // Get active word list based on mode
+        function getActiveWordList() {
+            const filteredWords = getFilteredWords();
+            return isRandomMode ? shuffledWords : filteredWords;
+        }
+
+        // Toggle between random and sequential mode
+        function toggleMode() {
+            isRandomMode = !isRandomMode;
+            const modeButton = document.getElementById('modeButton');
+            
+            if (isRandomMode) {
+                modeButton.textContent = '🔀 โหมดสุ่มคำ';
+                modeButton.className = 'bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 px-6 rounded-full transition-colors duration-200 text-sm';
+                shuffleWords();
+                showFeedback('เปลี่ยนเป็นโหมดสุ่มคำแล้ว! 🔀', 'info');
+            } else {
+                modeButton.textContent = '📋 โหมดเรียงลำดับ';
+                modeButton.className = 'bg-gray-500 hover:bg-gray-600 text-white font-semibold py-2 px-6 rounded-full transition-colors duration-200 text-sm';
+                currentWordIndex = 0;
+                showFeedback('เปลี่ยนเป็นโหมดเรียงลำดับแล้ว! 📋', 'info');
+            }
+            
+            loadCurrentWord();
+        }
+
+        // Switch role function
+        function switchRole() {
+            document.getElementById('mainContent').classList.add('hidden');
+            document.getElementById('roleSelection').classList.remove('hidden');
+            userRole = null;
+            
+            // Reset any feedback
+            document.getElementById('feedback').classList.add('hidden');
+        }
+
+        // Auto-detect word level based on complexity
+        function autoDetectLevel() {
+            const wordInput = document.getElementById('wordInput');
+            const word = wordInput.value.trim().toLowerCase();
+            
+            if (!word) {
+                showLevelDetectionResult('กรุณากรอกคำศัพท์ก่อน', 'warning');
+                return;
+            }
+            
+            const level = detectWordLevel(word);
+            document.getElementById('levelInput').value = level;
+            
+            const levelNames = {
+                'A1': 'เริ่มต้น (Beginner)',
+                'A2': 'พื้นฐาน (Elementary)', 
+                'B1': 'ปานกลาง (Intermediate)',
+                'B2': 'ปานกลางสูง (Upper-Intermediate)',
+                'C1': 'สูง (Advanced)',
+                'C2': 'เชี่ยวชาญ (Proficiency)'
+            };
+            
+            showLevelDetectionResult(`🎯 ตรวจพบระดับ ${level} - ${levelNames[level]}`, 'success');
+        }
+        
+        function detectWordLevel(word) {
+            // Common A1 words (basic everyday vocabulary)
+            const a1Words = [
+                'a', 'an', 'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by',
+                'i', 'you', 'he', 'she', 'it', 'we', 'they', 'me', 'him', 'her', 'us', 'them',
+                'my', 'your', 'his', 'her', 'its', 'our', 'their', 'this', 'that', 'these', 'those',
+                'am', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'have', 'has', 'had', 'do', 'does', 'did',
+                'will', 'would', 'can', 'could', 'may', 'might', 'must', 'should',
+                'hello', 'hi', 'bye', 'goodbye', 'please', 'thank', 'thanks', 'sorry', 'yes', 'no',
+                'name', 'age', 'old', 'new', 'big', 'small', 'good', 'bad', 'nice', 'fine',
+                'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten',
+                'red', 'blue', 'green', 'yellow', 'black', 'white', 'brown', 'pink', 'orange', 'purple',
+                'cat', 'dog', 'car', 'house', 'book', 'pen', 'table', 'chair', 'door', 'window',
+                'eat', 'drink', 'sleep', 'walk', 'run', 'sit', 'stand', 'go', 'come', 'see', 'look',
+                'mother', 'father', 'sister', 'brother', 'family', 'friend', 'teacher', 'student',
+                'school', 'home', 'work', 'play', 'study', 'learn', 'read', 'write', 'listen', 'speak'
+            ];
+            
+            // Common A2 words (elementary vocabulary)
+            const a2Words = [
+                'about', 'after', 'again', 'against', 'all', 'almost', 'alone', 'along', 'already', 'also',
+                'although', 'always', 'among', 'another', 'any', 'anyone', 'anything', 'anywhere', 'around',
+                'because', 'become', 'before', 'begin', 'behind', 'believe', 'below', 'between', 'both',
+                'bring', 'build', 'business', 'buy', 'call', 'change', 'choose', 'close', 'company',
+                'country', 'create', 'cut', 'day', 'decide', 'different', 'during', 'each', 'early',
+                'easy', 'end', 'enough', 'even', 'ever', 'every', 'everyone', 'everything', 'example',
+                'experience', 'explain', 'face', 'fact', 'far', 'feel', 'few', 'find', 'first', 'follow',
+                'food', 'free', 'from', 'full', 'game', 'get', 'give', 'great', 'group', 'grow',
+                'hand', 'happen', 'hard', 'head', 'health', 'hear', 'help', 'here', 'high', 'hold',
+                'hope', 'hour', 'how', 'however', 'idea', 'important', 'include', 'increase', 'information',
+                'instead', 'into', 'issue', 'job', 'keep', 'kind', 'know', 'large', 'last', 'late',
+                'later', 'laugh', 'law', 'lead', 'learn', 'least', 'leave', 'left', 'less', 'let',
+                'life', 'light', 'like', 'line', 'little', 'live', 'local', 'long', 'lot', 'love',
+                'make', 'man', 'many', 'market', 'may', 'mean', 'meet', 'member', 'mind', 'minute',
+                'miss', 'money', 'month', 'more', 'morning', 'most', 'move', 'much', 'music', 'need',
+                'never', 'news', 'next', 'night', 'nothing', 'now', 'number', 'often', 'only', 'open',
+                'order', 'other', 'over', 'own', 'part', 'pay', 'people', 'person', 'place', 'plan',
+                'point', 'problem', 'program', 'provide', 'put', 'question', 'quite', 'rather', 'really',
+                'reason', 'receive', 'remember', 'report', 'right', 'room', 'same', 'say', 'seem', 'sell',
+                'send', 'service', 'set', 'several', 'short', 'show', 'side', 'since', 'small', 'social',
+                'some', 'someone', 'something', 'sometimes', 'soon', 'sort', 'speak', 'special', 'start',
+                'state', 'still', 'stop', 'story', 'student', 'study', 'such', 'support', 'sure', 'system',
+                'take', 'talk', 'team', 'tell', 'than', 'think', 'though', 'three', 'through', 'time',
+                'today', 'together', 'too', 'top', 'toward', 'town', 'try', 'turn', 'two', 'under',
+                'understand', 'until', 'up', 'upon', 'use', 'used', 'using', 'very', 'want', 'water',
+                'way', 'week', 'well', 'what', 'when', 'where', 'which', 'while', 'who', 'why',
+                'win', 'without', 'woman', 'word', 'work', 'world', 'write', 'year', 'young'
+            ];
+            
+            // Check word length and complexity
+            const wordLength = word.length;
+            
+            // Very short common words are usually A1
+            if (wordLength <= 3 && a1Words.includes(word)) {
+                return 'A1';
+            }
+            
+            // Check if word is in A1 list
+            if (a1Words.includes(word)) {
+                return 'A1';
+            }
+            
+            // Check if word is in A2 list
+            if (a2Words.includes(word)) {
+                return 'A2';
+            }
+            
+            // Check for common prefixes and suffixes that indicate higher levels
+            const advancedPrefixes = ['pre', 'post', 'anti', 'pro', 'inter', 'trans', 'super', 'sub', 'over', 'under', 'mis', 'dis', 'un', 're'];
+            const advancedSuffixes = ['tion', 'sion', 'ment', 'ness', 'ity', 'ism', 'ist', 'ive', 'ous', 'ful', 'less', 'able', 'ible', 'ance', 'ence'];
+            
+            const hasAdvancedPrefix = advancedPrefixes.some(prefix => word.startsWith(prefix));
+            const hasAdvancedSuffix = advancedSuffixes.some(suffix => word.endsWith(suffix));
+            
+            // Words with advanced morphology are usually B2+
+            if (hasAdvancedPrefix || hasAdvancedSuffix) {
+                if (wordLength >= 10) return 'C1';
+                if (wordLength >= 8) return 'B2';
+                return 'B1';
+            }
+            
+            // Length-based classification for unknown words
+            if (wordLength <= 4) return 'A1';
+            if (wordLength <= 6) return 'A2';
+            if (wordLength <= 8) return 'B1';
+            if (wordLength <= 10) return 'B2';
+            if (wordLength <= 12) return 'C1';
+            return 'C2';
+        }
+        
+        function showLevelDetectionResult(message, type) {
+            const resultDiv = document.getElementById('levelDetectionResult');
+            resultDiv.classList.remove('hidden');
+            
+            let colorClass;
+            switch(type) {
+                case 'success':
+                    colorClass = 'text-green-600';
+                    break;
+                case 'warning':
+                    colorClass = 'text-orange-500';
+                    break;
+                default:
+                    colorClass = 'text-gray-500';
+            }
+            
+            resultDiv.className = `text-xs mt-1 ${colorClass}`;
+            resultDiv.textContent = message;
+            
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                resultDiv.classList.add('hidden');
+            }, 5000);
+        }
+
+        // Quick add word function
+        async function quickAddWord() {
+            const quickWordInput = document.getElementById('quickWordInput');
+            const word = quickWordInput.value.trim().toLowerCase();
+            
+            if (!word) {
+                showFeedback('กรุณาพิมพ์คำศัพท์', 'warning');
+                return;
+            }
+            
+            // Check if word already exists
+            if (words.some(w => w.word.toLowerCase() === word)) {
+                showFeedback(`คำ "${word}" มีอยู่ในรายการแล้ว`, 'warning');
+                return;
+            }
+            
+            // Show loading
+            const button = event.target;
+            const originalText = button.textContent;
+            button.textContent = '⏳ กำลังสร้าง...';
+            button.disabled = true;
+            
+            try {
+                // Generate word data
+                const result = await generateWordData(word);
+                const level = detectWordLevel(word);
+                
+                const newWord = {
+                    word: word,
+                    meaning: `คำศัพท์: ${word}`,
+                    sentence: result.sentence || `Example sentence with ${word}.`,
+                    level: level,
+                    audioUrl: null
+                };
+                
+                words.push(newWord);
+                shuffleWords();
+                updateWordList();
+                updatePracticeArea();
+                
+                // Clear input
+                quickWordInput.value = '';
+                
+                // Show success message
+                showFeedback(`🎉 เพิ่มคำ "${word}" ระดับ ${level} เรียบร้อยแล้ว!`, 'success');
+                
+            } catch (error) {
+                console.error('Quick add error:', error);
+                showFeedback('⚠️ ไม่สามารถเพิ่มคำศัพท์ได้ กรุณาลองใหม่', 'error');
+            } finally {
+                // Reset button
+                button.textContent = originalText;
+                button.disabled = false;
+            }
+        }
+        
+        // Handle Enter key for quick add
+        function handleQuickAdd(event) {
+            if (event.key === 'Enter') {
+                quickAddWord();
+            }
+        }
+
+        // Initialize the practice area
+        if (words.length > 0 && userRole) {
+            loadCurrentWord();
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'963a1f40e258a8f7',t:'MTc1MzI2MjYzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
